@@ -1,0 +1,9 @@
+src
+demo
+.babelrc
+webpack.*
+dist
+__tests__
+.prettierrc.json
+.eslintignore
+.eslintrc.json

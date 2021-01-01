@@ -1,18 +1,19 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-var ManifestPlugin = require('webpack-manifest-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const TerserJSPlugin = require('terser-webpack-plugin');
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// var ManifestPlugin = require('webpack-manifest-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.js',
+  entry: './src/App.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contentHash].js',
+    path: path.resolve('lib'),
+    filename: 'app.js',
+    libraryTarget: 'commonjs2',
   },
   module: {
     rules: [
@@ -39,17 +40,20 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: {
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
-            name: 'images/[path][name].[hash].[ext]',
+            fallback: 'file-loader',
+            name: '[name][md5:hash].[ext]',
+            outputPath: 'assets/',
+            publicPath: '/assets/',
           },
         },
       },
       {
         test: /\.css$/,
         use: [
-          // 'style-loader',
-          MiniCssExtractPlugin.loader,
+          'style-loader',
+          // MiniCssExtractPlugin.loader,
           'css-loader',
         ],
         exclude: /\.module\.css$/,
@@ -70,12 +74,32 @@ module.exports = {
       },
     ],
   },
-
+  resolve: {
+    alias: {
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+      assets: path.resolve(__dirname, 'assets'),
+    },
+  },
+  externals: {
+    react: {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'React',
+      root: 'React',
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'ReactDOM',
+      root: 'ReactDOM',
+    },
+  },
   plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new MiniCssExtractPlugin(),
-    new ManifestPlugin(),
+    // new CleanWebpackPlugin(),
+    // new HtmlWebpackPlugin({ template: './src/index.html' }),
+    // new MiniCssExtractPlugin(),
+    // new ManifestPlugin(),
     new Dotenv({
       path: `./envConfig/${process.env.RUN_ENV}.env`,
       safe: true,
@@ -85,17 +109,17 @@ module.exports = {
       defaults: false,
     }),
   ],
-  optimization: {
-    moduleIds: 'hashed',
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   moduleIds: 'hashed',
+  //   minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       vendor: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendors',
+  //         chunks: 'all',
+  //       },
+  //     },
+  //   },
+  // },
 };
