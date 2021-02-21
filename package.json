@@ -1,6 +1,6 @@
 {
   "name": "react-custom-demo",
-  "version": "1.0.18",
+  "version": "1.0.23",
   "description": "",
   "main": "./lib/app.js",
   "scripts": {
@@ -36,6 +36,11 @@
     "serve": "^11.3.2",
     "styled-components": "^5.1.1",
     "terser-webpack-plugin": "^4.1.0"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.1.1"
   },
   "jest": {
     "setupFilesAfterEnv": [
